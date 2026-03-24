@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Inventory Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        .dashboard-header {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 32px;
+            letter-spacing: 1px;
+            color: #212529;
+            text-align: center;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+        .btn {
+            width: 100%;
+            text-align: center;
+            font-size: 1.07rem;
+            font-weight: 600;
+            box-sizing: border-box;
+            padding: 12px 0;
+            background-color: #007bff;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: "Times New Roman", Times, serif;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .summary {
+            margin-top: 30px;
+            padding: 22px 34px;
+            background: #f7faff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgb(0 0 0 / 0.05);
+            max-width: 500px;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+        @media (max-width: 600px) {
+            .dashboard-header { font-size: 1.3rem }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .summary { padding: 10px; }
+        }
+        .alert ul { padding-left: 20px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="dashboard-header">INVENTORY DASHBOARD</div>
+    <div class="dashboard-grid">
+        <a href="add_equipment.php" class="btn">Add Equipment</a>
+        <a href="view_store_manager.php" class="btn">Store Managers</a>
+        <a href="view_customer.php" class="btn">Customers</a>
+        <a href="view_inventory.php" class="btn">Inventory</a>
+        <a href="view_orders.php" class="btn">Orders</a>
+        <a href="view_order_detail.php" class="btn">Order Details</a>
+        <a href="add_order.php" class="btn">Add Order</a>
+        <a href="view_payment.php" class="btn">Payments</a>
+        <a href="view_sales.php" class="btn">Sales</a>
+        <a href="equipment_request.php" class="btn">Request Equipment from Supplier</a>
+        <a href="add_to_cart.php" class="btn">Add Equipment to Cart</a>
+        <a href="view_cart.php" class="btn">View Cart & Checkout</a>
+        <a href="add_supplier.php" class="btn">Add Supplier</a>
+        <a href="view_supplier.php" class="btn">View Suppliers</a>
+        <a href="view_budget.php" class="btn">View Store Budget</a>
+    </div>
+
+    <h3>SUMMARY</h3>
+    <?php
+        include 'db_connect.php';
+
+        // Get total items and unique categories
+        $eq_count = 0; $cat_count = 0; $low = 0;
+        $res = oci_parse($conn, "SELECT COUNT(*) AS EQCOUNT, COUNT(DISTINCT CATEGORY_NAME) AS CATCOUNT FROM Equipment");
+        oci_execute($res);
+        if($row = oci_fetch_assoc($res)){
+            $eq_count = $row['EQCOUNT'];
+            $cat_count = $row['CATCOUNT'];
+        }
+
+        // Get count of low stock items (<10)
+        $lowres = oci_parse($conn, "SELECT COUNT(*) AS LOW FROM Inventory WHERE stock_level < 10");
+        oci_execute($lowres);
+        if($row2 = oci_fetch_assoc($lowres)){
+            $low = $row2['LOW'];
+        }
+    ?>
+    <div class="summary">
+        <div><b>Total Items:</b> <?= $eq_count ?></div>
+        <div><b>Categories:</b> <?= $cat_count ?></div>
+        <div><b>Low Stock (Below 10):</b> <?= $low ?></div>
+
+        <?php if($low == 0): ?>
+            <div style="color:#28813a; margin-top:10px;">All items have sufficient stock.</div>
+        <?php else: ?>
+            <?php
+                $listres = oci_parse($conn,"
+                    SELECT e.equipment_name, i.stock_level 
+                    FROM Equipment e JOIN Inventory i ON e.equipment_id = i.equipment_id 
+                    WHERE i.stock_level < 10
+                ");
+                oci_execute($listres);
+            ?>
+            <div class="alert" style="margin-top:10px; font-size: 1rem;">
+                Low stock items:
+                <ul style="margin-bottom:0;">
+                    <?php while($r = oci_fetch_assoc($listres)): ?>
+                        <li><?= htmlspecialchars($r['EQUIPMENT_NAME']) ?> (Stock: <?= $r['STOCK_LEVEL'] ?>)</li>
+                    <?php endwhile; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+</body>
+</html>

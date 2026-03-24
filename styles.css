@@ -1,0 +1,116 @@
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: "Times New Roman", Times, serif;
+  background-color: #f0f2f5;
+  color: #333;
+  height: 100%;
+}
+
+/* Main content container */
+.card {
+  width: 95vw;
+  max-width: 1400px;
+  min-height: 90vh;
+  margin: 20px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Times New Roman", Times, serif;
+  color: #222;
+  margin-bottom: 15px;
+}
+
+p, label {
+  font-size: 16px;
+  margin: 0 0 10px 0;
+  font-family: "Times New Roman", Times, serif;
+}
+
+/* Forms */
+input[type="text"], input[type="email"], input[type="number"], input[type="date"],
+select, textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  font-family: "Times New Roman", Times, serif;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="number"]:focus,
+input[type="date"]:focus, select:focus, textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Buttons */
+button, input[type="submit"], a.btn {
+  background-color: #007bff;
+  color: white !important;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 17px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: 600;
+}
+
+button:hover, input[type="submit"]:hover, a.btn:hover {
+  background-color: #0056b3;
+}
+
+/* Tables */
+table.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+  min-width: 600px;
+  font-family: "Times New Roman", Times, serif;
+}
+
+table.table th, table.table td {
+  border: 1px solid #ddd;
+  padding: 14px 15px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+table.table th {
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+  font-family: "Times New Roman", Times, serif;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    width: 95vw;
+    padding: 20px;
+  }
+  table.table {
+    font-size: 14px;
+    min-width: 100%;
+  }
+}
